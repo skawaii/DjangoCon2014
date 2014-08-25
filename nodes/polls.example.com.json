@@ -1,0 +1,14 @@
+{
+    "environment": "development",
+    "run_list": [
+        "recipe[apt]",
+        "recipe[git]",
+        "recipe[nginx]",
+        "recipe[postgresql]",
+        "recipe[postgresql::server]",
+        "recipe[postgresql::client]",
+        "recipe[python]",
+        "recipe[supervisor]",
+        "recipe[poll-app]"
+    ]
+}
