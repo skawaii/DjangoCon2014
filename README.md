@@ -4,18 +4,15 @@ DJANGOCON 2014
 Setting up your development environment for Django
 --------------------------------------------------
 
-Audience level:
-'''''''''''''''
+### Audience level: ###
 
 Novice
 
-Description
-'''''''''''
+### Description ###
 
 First steps and best practices for getting a reproduceable environment for Django development!
 
-Abstract
-''''''''
+### Abstract ###
 
 Using Vagrant and Chef-solo to set up a Django development environment.
 
