@@ -36,6 +36,7 @@ GRAPH
   paths (0.3.0)
   poll-app (0.1.0)
     postgres (>= 0.0.0)
+    python (>= 0.0.0)
   postgres (2.11.0)
     ipaddr_extensions (>= 0.0.0)
     paths (>= 0.0.0)
