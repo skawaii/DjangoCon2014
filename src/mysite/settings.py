@@ -8,6 +8,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
+import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -91,3 +92,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+
+# if manage.py test was called, use test settings
+if 'test' in sys.argv:
+    try:
+        from .test_settings import *
+    except ImportError:
+        pass
