@@ -6,6 +6,8 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+package "python-psycopg2"
+
 include_recipe "postgres"
 include_recipe "python"
 

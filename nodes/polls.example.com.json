@@ -7,6 +7,7 @@
         "recipe[postgresql]",
         "recipe[postgresql::server]",
         "recipe[postgresql::client]",
+        "recipe[postgresql::server_dev]",
         "recipe[python]",
         "recipe[supervisor]",
         "recipe[poll-app]"
