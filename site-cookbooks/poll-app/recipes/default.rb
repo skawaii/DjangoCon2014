@@ -12,19 +12,24 @@ include_recipe "postgres"
 include_recipe "python"
 
 # POSTGRESQL STUFF
-
-# This is for creating a user
 pg_user "polluser" do
   privileges superuser: false, createdb: false, login: true
   password "polluserpwd"
 end
 
-# This is for creating a database
 pg_database "polldb" do
   owner "polluser"
   encoding "UTF-8"
   template "template0"
   locale "en_US.UTF-8"
+end
+
+bash "load_database" do
+    user "vagrant"
+    cwd "/vagrant/src"
+    code <<-EOH
+    PGPASSWORD=polluserpwd ./scripts/load_demo_database.sh
+    EOH
 end
 
 # PYTHON STUFF
