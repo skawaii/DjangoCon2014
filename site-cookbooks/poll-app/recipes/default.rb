@@ -25,11 +25,11 @@ pg_database "polldb" do
 end
 
 bash "load_database" do
-    user "vagrant"
-    cwd "/vagrant/src"
-    code <<-EOH
-    PGPASSWORD=polluserpwd ./scripts/load_demo_database.sh
-    EOH
+  user "vagrant"
+  cwd "/vagrant/src"
+  code <<-EOH
+  PGPASSWORD=polluserpwd ./scripts/load_demo_database.sh
+  EOH
 end
 
 # PYTHON STUFF
@@ -37,4 +37,13 @@ python_virtualenv "/home/vagrant/polls_ve" do
   owner "vagrant"
   group "vagrant"
   action :create
+end
+
+# INSTALLING PYTHON STUFF
+bash "install_requirements.txt" do
+  user "vagrant"
+  cwd "/vagrant/"
+  code <<-EOH
+  . /home/vagrant/polls_ve/bin/activate && pip install -r requirements/requirements.txt
+  EOH
 end
