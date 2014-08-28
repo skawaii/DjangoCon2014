@@ -63,3 +63,11 @@ template "/home/vagrant/bin/gunicorn_start.bash" do
   mode 0754
   source "gunicorn_start.bash.erb"
 end
+
+# SET THE NEW SUPERVISORD.CONF FILE
+template "/etc/supervisord.conf" do
+  owner "root"
+  group "root"
+  mode 0644
+  source "supervisord.conf.erb"
+end
