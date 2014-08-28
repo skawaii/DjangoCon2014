@@ -9,6 +9,7 @@ DEPENDENCIES
     revision: 8438360775ce239627878dddded9cfde72e2d3ff
   python (~> 1.4.6)
   supervisor (~> 0.4.12)
+  vim (~> 1.1.2)
 
 GRAPH
   apt (2.5.2)
@@ -60,6 +61,7 @@ GRAPH
     resource-control (>= 0.0.0)
   supervisor (0.4.12)
     python (>= 0.0.0)
+  vim (1.1.2)
   windows (1.34.2)
     chef_handler (>= 0.0.0)
   yum (3.2.4)
