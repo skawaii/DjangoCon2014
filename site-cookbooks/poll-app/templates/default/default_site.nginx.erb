@@ -1,0 +1,30 @@
+upstream poll_app_upstream {
+    server unix:/tmp/poll_app_gunicorn.sock fail_timeout=0;
+}
+
+server {
+    listen   80;
+    charset utf-8;
+    server_name  precise64;
+
+    access_log  /var/log/nginx/poll_app.access.log;
+    error_log   /var/log/nginx/poll_app.error.log;
+
+    location /static/ {
+        add_header Pragma "public";
+        add_header Cache-Control "public";
+        expires 24h;
+        access_log off;
+        log_not_found off;
+        alias /vagrant/src/static/;
+    }
+
+    location / {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+        proxy_set_header X-Forwarded-Protocol $scheme;
+        proxy_set_header X-Formarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://poll_app_upstream/;
+    }
+}
