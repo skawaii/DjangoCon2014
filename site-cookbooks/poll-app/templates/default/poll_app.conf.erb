@@ -1,0 +1,12 @@
+[program:django_poll_app]
+command=/home/vagrant/bin/gunicorn_start.bash
+user=vagrant
+redirect_stderr=true
+stdout_logfile=/home/vagrant/logs/gunicorn.log
+stdout_logfile_backups=100
+stdout_logfile_maxbytes=20MB
+autostart=true
+autorestart=false
+stopsignal=INT
+stopwaitsecs=2
+startsecs=2
