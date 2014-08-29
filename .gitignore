@@ -1,2 +1,5 @@
 /cookbooks/
 .vagrant/
+*.pyc
+src/static/
+

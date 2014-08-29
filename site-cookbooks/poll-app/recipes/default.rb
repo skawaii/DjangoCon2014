@@ -8,16 +8,25 @@
 #
 include_recipe "postgres"
 
-# This is for creating a user
+# CREATE POSTGRESQL USER
 pg_user "polluser" do
   privileges superuser: false, createdb: false, login: true
   password "polluserpwd"
 end
 
-# This is for creating a database
+# CREATE POSTGRES DB
 pg_database "polldb" do
   owner "polluser"
   encoding "UTF-8"
   template "template0"
   locale "en_US.UTF-8"
+end
+
+# LOAD THE DB WITH DATA
+bash "load_database" do
+  user "vagrant"
+  cwd "/vagrant/src"
+  code <<-EOH
+  PGPASSWORD=polluserpwd ./scripts/load_demo_database.sh
+  EOH
 end

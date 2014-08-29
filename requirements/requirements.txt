@@ -1,0 +1,6 @@
+Django==1.6.6
+argparse==1.2.1
+ipython==2.2.0
+psycopg2==2.5.3
+six==1.7.3
+wsgiref==0.1.2
