@@ -1,16 +1,20 @@
 {
-    "environment": "development",
+    "environment": "staging",
     "run_list": [
         "recipe[apt]",
         "recipe[vim]",
         "recipe[git]",
+        "recipe[nginx]",
         "recipe[postgresql]",
         "recipe[postgresql::server]",
         "recipe[postgresql::client]",
         "recipe[postgresql::server_dev]",
         "recipe[python]",
+        "recipe[supervisor]",
         "recipe[poll-app]",
         "recipe[poll-app-python]",
-        "recipe[poll-app-python::development]"
+        "recipe[poll-app-python::staging]",
+        "recipe[poll-app-supervisor]",
+        "recipe[poll-app-nginx]"
     ]
 }
