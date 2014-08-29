@@ -4,6 +4,12 @@ DEPENDENCIES
   nginx (~> 2.7.4)
   poll-app
     path: site-cookbooks/poll-app
+  poll-app-nginx
+    path: site-cookbooks/poll-app-nginx
+  poll-app-python
+    path: site-cookbooks/poll-app-python
+  poll-app-supervisor
+    path: site-cookbooks/poll-app-supervisor
   postgresql
     git: https://github.com/phlipper/chef-postgresql.git
     revision: 8438360775ce239627878dddded9cfde72e2d3ff
@@ -38,6 +44,9 @@ GRAPH
   poll-app (0.1.0)
     postgres (>= 0.0.0)
     python (>= 0.0.0)
+  poll-app-nginx (0.1.0)
+  poll-app-python (0.1.0)
+  poll-app-supervisor (0.1.0)
   postgres (2.11.0)
     ipaddr_extensions (>= 0.0.0)
     paths (>= 0.0.0)
