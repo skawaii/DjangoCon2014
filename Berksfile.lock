@@ -4,6 +4,8 @@ DEPENDENCIES
   nginx (~> 2.7.4)
   poll-app
     path: site-cookbooks/poll-app
+  poll-app-nginx
+    path: site-cookbooks/poll-app-nginx
   poll-app-python
     path: site-cookbooks/poll-app-python
   poll-app-supervisor
@@ -42,6 +44,7 @@ GRAPH
   poll-app (0.1.0)
     postgres (>= 0.0.0)
     python (>= 0.0.0)
+  poll-app-nginx (0.1.0)
   poll-app-python (0.1.0)
   poll-app-supervisor (0.1.0)
   postgres (2.11.0)

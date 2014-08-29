@@ -13,6 +13,7 @@
         "recipe[supervisor]",
         "recipe[poll-app]",
         "recipe[poll-app-python]",
-        "recipe[poll-app-supervisor]"
+        "recipe[poll-app-supervisor]",
+        "recipe[poll-app-nginx]"
     ]
 }
