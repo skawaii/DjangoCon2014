@@ -10,3 +10,4 @@ cookbook 'supervisor', '~> 0.4.12'
 
 cookbook 'poll-app', path: "./site-cookbooks/poll-app"
 cookbook 'poll-app-python', path: "./site-cookbooks/poll-app-python"
+cookbook 'poll-app-supervisor', path: "./site-cookbooks/poll-app-supervisor"
