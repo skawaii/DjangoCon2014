@@ -6,10 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-package "python-psycopg2"
-
 include_recipe "postgres"
-include_recipe "python"
 
 # CREATE POSTGRESQL USER
 pg_user "polluser" do
@@ -31,22 +28,6 @@ bash "load_database" do
   cwd "/vagrant/src"
   code <<-EOH
   PGPASSWORD=polluserpwd ./scripts/load_demo_database.sh
-  EOH
-end
-
-# CREATE A VIRTUALENV
-python_virtualenv "/home/vagrant/polls_ve" do
-  owner "vagrant"
-  group "vagrant"
-  action :create
-end
-
-# INSTALLING PYTHON STUFF
-bash "install_requirements.txt" do
-  user "vagrant"
-  cwd "/vagrant/"
-  code <<-EOH
-  . /home/vagrant/polls_ve/bin/activate && pip install -r requirements/requirements.txt
   EOH
 end
 

@@ -11,6 +11,7 @@
         "recipe[postgresql::server_dev]",
         "recipe[python]",
         "recipe[supervisor]",
-        "recipe[poll-app]"
+        "recipe[poll-app]",
+        "recipe[poll-app-python]"
     ]
 }
