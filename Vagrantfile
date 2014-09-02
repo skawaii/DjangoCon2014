@@ -6,14 +6,15 @@ require 'json'
 
 Chef::Config.from_file(File.join(File.dirname(__FILE__), '.chef', 'knife.rb'))
 vagrant_json = JSON.parse(Pathname(__FILE__).dirname.join('nodes', (ENV['NODE'] || 'polls.example.com.json')).read)
+environment_node = (ENV['NODE'] || 'polls.example.com.json')
 
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "precise64"
 
-  config.vm.network :forwarded_port, guest: 80, host: 8080 if ENV['NODE'] == 'staging-polls.example.com.json'
-  config.vm.network :forwarded_port, guest: 8000, host: 8000 if ENV['NODE'] == 'polls.example.com.json'
+  config.vm.network :forwarded_port, guest: 80, host: 8080 if environment_node == 'staging-polls.example.com.json'
+  config.vm.network :forwarded_port, guest: 8000, host: 8000 if environment_node == 'polls.example.com.json'
 
   config.omnibus.chef_version = :latest
   config.berkshelf.enabled = true
