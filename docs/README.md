@@ -327,10 +327,18 @@ OK. So now it's time to use some of the other downloaded recipes the way we want
 First of all, we do have to add our recently created cookbook to our run_list for the node we want it to be ran:
 
 ```json
-# nodes/polls.example.com.json
-...
+// nodes/polls.example.com.json
+{
+    "environment": "development",
+    "run_list": [
+        "recipe[apt]",
+        "recipe[vim]",
+        "recipe[git]",
+        "recipe[postgresql]",
+        "recipe[postgresql::server]",
+        "recipe[postgresql::client]",
+        "recipe[postgresql::server_dev]",
         "recipe[python]",
-        "recipe[supervisor]",
         "recipe[poll-app]"
     ]
 }
@@ -340,10 +348,16 @@ But this is the first step of two. We have to modify our Berksfile like this:
 
 ```ruby
 # ./Berksfile
-...
-postgresql.git'
+source "https://supermarket.getchef.com/"
+
+cookbook 'apt', '~> 2.5.2'
+cookbook 'git', '~> 4.0.2'
+cookbook 'vim', '~> 1.1.2'
+cookbook 'nginx', '~> 2.7.4'
+cookbook "postgresql", git: 'https://github.com/phlipper/chef-postgresql.git'
 cookbook 'python', '~> 1.4.6'
 cookbook 'supervisor', '~> 0.4.12'
+
 cookbook 'poll-app', path: "./site-cookbooks/poll-app"
 ```
 
@@ -352,8 +366,14 @@ Doing that we ensure ourselves that Chef will be able to find our cookbook.
 After that two-step procedure, if we want our cookbook to use some of the other already downloaded cookbooks we have to tell it we want to do so. First, in the metadata.rb file in our cookbook we include a line like this:
 
 ```ruby
-# metadata.rb
-...
+name             'poll-app'
+maintainer       'Ramon Maria Gallart'
+maintainer_email 'rgallart@ramagaes.com'
+license          'MIT'
+description      'Installs/Configures poll-app'
+long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
+version          '0.1.0'
+
 depends "postgres"
 ```
 
@@ -434,10 +454,18 @@ Next we use the bash resource provided by chef to install the requirements neede
 As the poll-app cookbook we have to declare our new recipe to the Berksfile and add it to the polls.example.com.json node file:
 
 ```json
-# nodes/polls.example.com.json
-...
+// nodes/polls.example.com.json
+{
+    "environment": "development",
+    "run_list": [
+        "recipe[apt]",
+        "recipe[vim]",
+        "recipe[git]",
+        "recipe[postgresql]",
+        "recipe[postgresql::server]",
+        "recipe[postgresql::client]",
+        "recipe[postgresql::server_dev]",
         "recipe[python]",
-        "recipe[supervisor]",
         "recipe[poll-app]",
         "recipe[poll-app-python]"
     ]
@@ -448,12 +476,18 @@ But, remember, this is the first step of two. We have to modify our Berksfile li
 
 ```ruby
 # ./Berksfile
-...
-postgresql.git'
+source "https://supermarket.getchef.com/"
+
+cookbook 'apt', '~> 2.5.2'
+cookbook 'git', '~> 4.0.2'
+cookbook 'vim', '~> 1.1.2'
+cookbook 'nginx', '~> 2.7.4'
+cookbook "postgresql", git: 'https://github.com/phlipper/chef-postgresql.git'
 cookbook 'python', '~> 1.4.6'
 cookbook 'supervisor', '~> 0.4.12'
+
 cookbook 'poll-app', path: "./site-cookbooks/poll-app"
-cookbook 'poll-app', path: "./site-cookbooks/poll-app-python"
+cookbook 'poll-app-python', path: "./site-cookbooks/poll-app-python"
 ```
 
 Lets check if that works! As before, run first vagrant provision or vagrant up --provision and then vagrant ssh.
