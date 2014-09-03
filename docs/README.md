@@ -7,11 +7,6 @@
 This is a novice-level tutorial-like document. Its goal is to serve as a first entry-point to create a re-usable machine to develop Django projects, so that it can be spun up in minutes by any developer team member in your team. Or whoever you want.
 
 
-
-Table of Contents
-
-
-
 # Main Goal
 
 This is a very straightforward step-by-step tutorial walkthrough that will guide you in the process of spinning up a development machine to work with a Django project using Virtualbox, Vagrant and Chef-solo. The Django project is the Polls app from the [Django tutorial](https://docs.djangoproject.com/en/1.6/).
@@ -59,16 +54,18 @@ Initialize a Vagrant machine:
 
 Resulting file (comments omitted)
 
-    # -*- mode: ruby -*-
-    # vi: set ft=ruby :
+```ruby
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
 
-    VAGRANTFILE_API_VERSION = "2"
+VAGRANTFILE_API_VERSION = "2"
 
-    Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-      config.vm.box = "precise64"
-      config.omnibus.chef_version = :latest
-      config.berkshelf.enabled = true
-    end
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "precise64"
+  config.omnibus.chef_version = :latest
+  config.berkshelf.enabled = true
+end
+```
 
 Create a file named Gemfile:
 
@@ -78,9 +75,11 @@ Create a file named Gemfile:
 
 And write this content in it:
 
-    source "https://rubygems.org"
+```ruby
+source "https://rubygems.org"
 
-    gem 'knife-solo'
+gem 'knife-solo'
+```
 
 This will instruct bundle to install the open source tool knife-solo.
 
@@ -98,7 +97,7 @@ So, in order to continue creating our environment we need to initialize the kitc
 
 Once this command has ran, we have the following directory infrastructure:
 
-    ramonmariagallart@Olympos $ ll -a
+    ramonmariagallart@Olympos $ ls -la
     total 32
     drwxr-xr-x 14 ramonmariagallart staff 476B 21 ago 16:36 ./
     drwxr-xr-x 11 ramonmariagallart staff 374B 21 ago 16:14 ../
@@ -133,45 +132,50 @@ Arguably the best resource to find cookbooks is the [Chef supermarket](https://s
 
 That said, lets write this into the file:
 
-    source "https://supermarket.getchef.com/"
-    cookbook 'apt', '~> 2.5.2'
-    cookbook 'nginx', '~> 2.7.4'
-    cookbook "postgresql", git: 'https://github.com/phlipper/chef-postgresql.git'
-    cookbook 'python', '~> 1.4.6'
-    cookbook 'supervisor', '~> 0.4.12'
+```ruby
+source "https://supermarket.getchef.com/"
+
+cookbook 'apt', '~> 2.5.2'
+cookbook 'nginx', '~> 2.7.4'
+cookbook "postgresql", git: 'https://github.com/phlipper/chef-postgresql.git'
+cookbook 'python', '~> 1.4.6'
+cookbook 'supervisor', '~> 0.4.12'
+```
 
 If we start the environment up now we will see that none of these cookbooks are getting installed. This is because we have to tell Vagrant (specifically indicate to it inside the Vagrantfile) which cookbooks must be installed.
 
 To that end we will modify our Vagrantfile until it looks something like this:
 
-    # -*- mode: ruby -*-
-    # vi: set ft=ruby :
+```ruby
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
 
-    require 'chef'
-    require 'json'
+require 'chef'
+require 'json'
 
-    Chef::Config.from_file(File.join(File.dirname(__FILE__), '.chef', 'knife.rb'))
-    vagrant_json = JSON.parse(Pathname(__FILE__).dirname.join('nodes', (ENV['NODE'] || 'polls.example.com.json')).read)
-    environment_node = (ENV['NODE'] || 'polls.example.com.json')
+Chef::Config.from_file(File.join(File.dirname(__FILE__), '.chef', 'knife.rb'))
+vagrant_json = JSON.parse(Pathname(__FILE__).dirname.join('nodes', (ENV['NODE'] || 'polls.example.com.json')).read)
+environment_node = (ENV['NODE'] || 'polls.example.com.json')
 
-    VAGRANTFILE_API_VERSION = "2"
+VAGRANTFILE_API_VERSION = "2"
 
-    Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-      config.vm.box = "precise64"
-      config.vm.network :forwarded_port, guest: 80, host: 8080 if environment_node == 'staging-polls.example.com.json'
-      config.vm.network :forwarded_port, guest: 8000, host: 8000 if environment_node == 'polls.example.com.json'
-      config.omnibus.chef_version = :latest
-      config.berkshelf.enabled = true
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "precise64"
+  config.vm.network :forwarded_port, guest: 80, host: 8080 if environment_node == 'staging-polls.example.com.json'
+  config.vm.network :forwarded_port, guest: 8000, host: 8000 if environment_node == 'polls.example.com.json'
+  config.omnibus.chef_version = :latest
+  config.berkshelf.enabled = true
 
-      config.vm.provision "chef_solo" do |chef|
-        chef.roles_path = Chef::Config["role_path"]
-        chef.data_bags_path = Chef::Config["data_bag_path"]
-        chef.environments_path = Chef::Config["environment_path"]
-        chef.environment = ENV['ENVIRONMENT'] || 'development'
-        chef.run_list = vagrant_json.delete('run_list')
-        chef.json = vagrant_json
-      end
-    end
+  config.vm.provision "chef_solo" do |chef|
+    chef.roles_path = Chef::Config["role_path"]
+    chef.data_bags_path = Chef::Config["data_bag_path"]
+    chef.environments_path = Chef::Config["environment_path"]
+    chef.environment = ENV['ENVIRONMENT'] || 'development'
+    chef.run_list = vagrant_json.delete('run_list')
+    chef.json = vagrant_json
+  end
+end
+```
 
 As said before, Vagrantfile is a Ruby script and we can take advantage of that. We set up the Config object from the Chef module to include the data that is inside the file ./.chef/knife.rb.
 
@@ -197,12 +201,14 @@ So, lets create the files:
 
 This is the content for the file:
 
-    {
-        "name": "development",
-        "description": "development environment",
-        "chef_type": "environment",
-        "json_class": "Chef::Environment"
-    }
+```json
+{
+    "name": "development",
+    "description": "development environment",
+    "chef_type": "environment",
+    "json_class": "Chef::Environment"
+}
+```
 
 One of the parameters that this file may contain is "default_attributes" which we can leverage in order to modify some attributes of the downloaded cookbooks.
 
@@ -212,19 +218,21 @@ One of the parameters that this file may contain is "default_attributes" which w
 
 Write in the following content:
 
-    {
-        "environment": "development",
-        "run_list": [
-            "recipe[apt]",
-            "recipe[vim]",
-            "recipe[git]",
-            "recipe[postgresql]",
-            "recipe[postgresql::server]",
-            "recipe[postgresql::client]",
-            "recipe[postgresql::server\_dev]",
-            "recipe[python]"
-        ]
-    }
+```json
+{
+    "environment": "development",
+    "run_list": [
+        "recipe[apt]",
+        "recipe[vim]",
+        "recipe[git]",
+        "recipe[postgresql]",
+        "recipe[postgresql::server]",
+        "recipe[postgresql::client]",
+        "recipe[postgresql::server\_dev]",
+        "recipe[python]"
+    ]
+}
+```
 
 As we can see, inside the file we define this node to belong to the development environment and a "run_list". This list contains the recipes we want to run for this node. **It is important to mention that recipes are executed in the same order found in the list** .
 
@@ -302,13 +310,15 @@ The first thing we have to do is update the metadata.rb file which contains main
 
 And we can leave it like this:
 
-    name 'poll-app'
-    maintainer 'Ramon Maria Gallart'
-    maintainer_email 'rgallart@ramagaes.com'
-    license 'MIT'
-    description 'Installs/Configures poll-app'
-    long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-    version '0.1.0'
+```ruby
+name 'poll-app'
+maintainer 'Ramon Maria Gallart'
+maintainer_email 'rgallart@ramagaes.com'
+license 'MIT'
+description 'Installs/Configures poll-app'
+long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
+version '0.1.0'
+```
 
 Pretty self-explanatory. For the long-description we will insert the contents of the README.md file contained in the same directory as metadata.rb.
 
@@ -316,49 +326,57 @@ OK. So now it's time to use some of the other downloaded recipes the way we want
 
 First of all, we do have to add our recently created cookbook to our run_list for the node we want it to be ran:
 
-    # nodes/polls.example.com.json
-    ...
-            "recipe[python]",
-            "recipe[supervisor]",
-            "recipe[poll-app]"
-        ]
-    }
+```json
+# nodes/polls.example.com.json
+...
+        "recipe[python]",
+        "recipe[supervisor]",
+        "recipe[poll-app]"
+    ]
+}
+```
 
 But this is the first step of two. We have to modify our Berksfile like this:
 
-    # ./Berksfile
-    ...
-    postgresql.git'
-    cookbook 'python', '~> 1.4.6'
-    cookbook 'supervisor', '~> 0.4.12'
-    cookbook 'poll-app', path: "./site-cookbooks/poll-app"
+```ruby
+# ./Berksfile
+...
+postgresql.git'
+cookbook 'python', '~> 1.4.6'
+cookbook 'supervisor', '~> 0.4.12'
+cookbook 'poll-app', path: "./site-cookbooks/poll-app"
+```
 
 Doing that we ensure ourselves that Chef will be able to find our cookbook.
 
 After that two-step procedure, if we want our cookbook to use some of the other already downloaded cookbooks we have to tell it we want to do so. First, in the metadata.rb file in our cookbook we include a line like this:
 
-    # metadata.rb
-    ...
-    depends "postgres"
+```ruby
+# metadata.rb
+...
+depends "postgres"
+```
 
 And then, in our recipe.rb file:
 
-    # recipes/default.rb
-    include_recipe "postgres"
+```ruby
+# recipes/default.rb
+include_recipe "postgres"
 
-    # CREATE POSTGRESQL USER
-    pg_user "polluser" do
-      privileges superuser: false, createdb: false, login: true
-      password "polluserpwd"
-    end
+# CREATE POSTGRESQL USER
+pg_user "polluser" do
+  privileges superuser: false, createdb: false, login: true
+  password "polluserpwd"
+end
 
-    # CREATE POSTGRES DB
-    pg_database "polldb" do
-      owner "polluser"
-      encoding "UTF-8"
-      template "template0"
-      locale "en_US.UTF-8"
-    end
+# CREATE POSTGRES DB
+pg_database "polldb" do
+  owner "polluser"
+  encoding "UTF-8"
+  template "template0"
+  locale "en_US.UTF-8"
+end
+```
 
 With that script we will create a polluser on our database with login permissions and a polldb database whose owner is the polluser previously created.
 
@@ -386,24 +404,26 @@ So, what's our next step? If we want to develop a Django app it is common to use
 
 In the recipes/metadata.rb we will write the following code:
 
-    package "python-psycopg2"
-    include_recipe "python"
+```ruby
+package "python-psycopg2"
+include_recipe "python"
 
-    # CREATE A VIRTUALENV
-    python_virtualenv "/home/vagrant/polls_ve" do
-      owner "vagrant"
-      group "vagrant"
-      action :create
-    end
+# CREATE A VIRTUALENV
+python_virtualenv "/home/vagrant/polls_ve" do
+  owner "vagrant"
+  group "vagrant"
+  action :create
+end
 
-    # INSTALLING PYTHON STUFF
-    bash "install_requirements.txt" do
-      user "vagrant"
-      cwd "/vagrant/"
-      code <<-EOH
-      . /home/vagrant/polls_ve/bin/activate && pip install -r requirements/requirements.txt
-      EOH
-    end
+# INSTALLING PYTHON STUFF
+bash "install_requirements.txt" do
+  user "vagrant"
+  cwd "/vagrant/"
+  code <<-EOH
+  . /home/vagrant/polls_ve/bin/activate && pip install -r requirements/requirements.txt
+  EOH
+end
+```
 
 What we are instructing chef-solo to do here is that we want to install "python-psycopg2" if it is not already. After that we state that we will need recipes inside the "python" cookbook.
 
@@ -413,24 +433,28 @@ Next we use the bash resource provided by chef to install the requirements neede
 
 As the poll-app cookbook we have to declare our new recipe to the Berksfile and add it to the polls.example.com.json node file:
 
-    # nodes/polls.example.com.json
-    ...
-            "recipe[python]",
-            "recipe[supervisor]",
-            "recipe[poll-app]",
-            "recipe[poll-app-python]"
-        ]
-    }
+```json
+# nodes/polls.example.com.json
+...
+        "recipe[python]",
+        "recipe[supervisor]",
+        "recipe[poll-app]",
+        "recipe[poll-app-python]"
+    ]
+}
+```
 
 But, remember, this is the first step of two. We have to modify our Berksfile like this:
 
-    # ./Berksfile
-    ...
-    postgresql.git'
-    cookbook 'python', '~> 1.4.6'
-    cookbook 'supervisor', '~> 0.4.12'
-    cookbook 'poll-app', path: "./site-cookbooks/poll-app"
-    cookbook 'poll-app', path: "./site-cookbooks/poll-app-python"
+```ruby
+# ./Berksfile
+...
+postgresql.git'
+cookbook 'python', '~> 1.4.6'
+cookbook 'supervisor', '~> 0.4.12'
+cookbook 'poll-app', path: "./site-cookbooks/poll-app"
+cookbook 'poll-app', path: "./site-cookbooks/poll-app-python"
+```
 
 Lets check if that works! As before, run first vagrant provision or vagrant up --provision and then vagrant ssh.
 
