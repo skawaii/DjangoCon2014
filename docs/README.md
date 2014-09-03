@@ -313,7 +313,7 @@ And we can leave it like this:
 ```ruby
 name 'poll-app'
 maintainer 'Ramon Maria Gallart'
-maintainer_email 'rgallart@ramagaes.com'
+maintainer_email 'ramon.gallart@docusign.com'
 license 'MIT'
 description 'Installs/Configures poll-app'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
@@ -368,7 +368,7 @@ After that two-step procedure, if we want our cookbook to use some of the other 
 ```ruby
 name             'poll-app'
 maintainer       'Ramon Maria Gallart'
-maintainer_email 'rgallart@ramagaes.com'
+maintainer_email 'ramon.gallart@docusign.com'
 license          'MIT'
 description      'Installs/Configures poll-app'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
